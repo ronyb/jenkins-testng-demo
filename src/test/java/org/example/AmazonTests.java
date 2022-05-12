@@ -3,10 +3,12 @@ package org.example;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.Reporter;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import java.io.FileInputStream;
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
@@ -29,13 +31,14 @@ public class AmazonTests {
         System.setProperty("webdriver.chrome.driver", "webdriver/chromedriver.exe");
         WebDriver driver = new ChromeDriver();
         driver.manage().window().maximize();
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
 
         for (String searchTerm : searchTerms) {
             driver.get(baseUrl);
             driver.findElement(By.id("twotabsearchtextbox")).sendKeys(searchTerm);
             driver.findElement(By.id("nav-search-submit-button")).click();
             String firstResultTitle = driver.findElements(By.cssSelector("[data-component-type='s-search-result']:not(.AdHolder) h2")).get(0).getText();
-            System.out.println("First result for search: \"" + searchTerm + "\" --> \"" + firstResultTitle + "\"");
+            Reporter.log("Search: \"" + searchTerm + "\" --> First result: \"" + firstResultTitle + "\"", true);
         }
 
         driver.quit();

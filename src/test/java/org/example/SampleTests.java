@@ -9,8 +9,10 @@ import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import java.io.FileInputStream;
+import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
@@ -35,12 +37,12 @@ public class SampleTests {
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
 
         for (String searchTerm : searchTerms) {
-            Reporter.log("Navigate to: " + baseUrl, true);
+            report("Navigate to: " + baseUrl);
             driver.get(baseUrl);
             driver.findElement(By.id("twotabsearchtextbox")).sendKeys(searchTerm);
             driver.findElement(By.id("nav-search-submit-button")).click();
             String firstResultTitle = driver.findElements(By.cssSelector("[data-component-type='s-search-result']:not(.AdHolder) h2")).get(0).getText();
-            Reporter.log("Search: \"" + searchTerm + "\" --> First result: \"" + firstResultTitle + "\"", true);
+            report("Search: \"" + searchTerm + "\" --> First result: \"" + firstResultTitle + "\"");
         }
 
         driver.quit();
@@ -48,16 +50,16 @@ public class SampleTests {
 
     @Test
     public void flakyTest() {
-        Reporter.log("Generating a random int in range: 0-100", true);
-        Reporter.log("Test will fail if the int is odd", true);
+        report("Generating a random int in range: 0-100");
+        report("Test will fail if the int is odd");
         int random = randomInt(0, 100);
         Assert.assertEquals(random % 2, 0, "Random int is: " + random + " - that's an odd number :(");
-        Reporter.log("Random int is: " + random + " - that's an even number - Great!", true);
+        report("Random int is: " + random + " - that's an even number - Great!");
     }
 
     @Test
     public void passTest() {
-        Reporter.log("Hello world! Everything's OK :)");
+        report("Hello world! Everything's OK :)");
     }
 
     @Test
@@ -67,5 +69,9 @@ public class SampleTests {
 
     private int randomInt(int min, int max) {
         return (int) ((Math.random() * (max - min)) + min);
+    }
+
+    private void report(String message) {
+        Reporter.log(new SimpleDateFormat("[HH:mm:ss]: ").format(new Date()) + message, true);
     }
 }
